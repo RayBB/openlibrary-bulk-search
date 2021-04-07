@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Easy way to lookup multiple ISBNs for openlibrary.org">
+    <style>[v-cloak] {display: none;}</style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Bulk Lookup for Open Library</title>
+  </head>
+  <body style="background-color: #fff9f0">
+    <div class="container">
+      <h1>Open Library Bulk Search</h1>
+      <div id="list-rendering">
+          <div class="input-group my-2 my-lg-0">
+            <input v-model="inputText" v-on:keyup.enter="startSearch" ref="input" class="form-control mw-100" type="text" placeholder="9781930206588,9781453896259">
+            <button v-on:click="startSearch" class="btn btn-primary ml-2">Search</button>
+            <button v-on:click="clear" class="btn btn-danger ml-2">Clear</button>
+          
+          </div>
+          <br>
+          <span v-cloak>
+            <div class="d-flex" style="height: 250px" v-for="book in isbns">
+                <div class="card mb-3" style="width:100%">
+                  <div class="row no-gutters h-100">
+                    <div class="col-md-2 mh-100 bg-light d-flex align-middle justify-content-center">
+                      <img class="mh-100" v-bind:src="getImgUrl(book)">
+                    </div>
+                    <div class="col-md-3">
+                      <div class="card-body">
+                        <h5 class="card-title">Links</h5>
+                        <ul>
+                          <li v-for="{link, label} in linksAndLabels">
+                            <a target="_blank" v-bind:href="link+book.isbn">{{label}}</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="card-body">
+                        <h5 class="card-title">Book</h5>
+                        <ul>
+                          <li>ISBN: {{ book.isbn }}</li>
+                          <li v-bind:class="book.status == 'Not Found' ? 'text-danger' : ''"> Status: {{ book.status }}</li>
+                          <li>Title: {{ book.data.title || "..." }}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3.0.11/dist/vue.global.js"></script>
+    <script src="./index.js"></script>
+  </body>
+</html>
